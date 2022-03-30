@@ -11,8 +11,11 @@ Pre-release Version 0.1.0-alpha:
 4) Preliminary pupil and blink analysis
 
 Linjing Jiang
+
 Stony Brook University
+
 E-Mail: linjing.jiang@stonybrook.edu
+
 2022 Mar 30.
 
 # Abstract
