@@ -19,7 +19,7 @@ E-Mail: linjing.jiang@stonybrook.edu
 2022 Mar 30.
 
 # Abstract
-LJ_Eyes is a Matlab Toolbox for preliminary analysis of EyeLink Edf result files. 
+LJ_Eyes© is a Matlab Toolbox for preliminary analysis of EyeLink Edf result files. 
 
 # Copyright
 Copyright © 2022 Linjing Jiang, Stony Brook University. All rights reserved.
@@ -32,4 +32,4 @@ MATLAB® is a registered Trademark of MathWorks, Inc.™ (http://www.mathworks.c
 You are allowed to use this software for free, but please acknowledge if you are using this software for eye data analysis.
 
 # License
-LJ_Eyes Toolbox is Licensed under the BSD 3-clause License. One blink analysis script uses slightly modified code (Hershman, Henik and Cohen, 2018) from R. Hershman and N. Cohen 2018: https://osf.io/jyz43/
+LJ_Eyes© Toolbox is Licensed under the BSD 3-clause License. One blink analysis script uses slightly modified code (Hershman, Henik and Cohen, 2018) from R. Hershman and N. Cohen 2018: https://osf.io/jyz43/
