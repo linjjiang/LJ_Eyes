@@ -1,7 +1,7 @@
 # LJ_Eyes
 An eye-tracking analysis toolbox (under development)
 
-To use this toolbox, make sure that you installed Edf2Mat© Matlab Toolbox on your computer:https://github.com/uzh/edf-converter
+To use this toolbox, make sure that you installed Edf2Mat© Matlab Toolbox on your computer: https://github.com/uzh/edf-converter
 
 Pre-release Version 0.1.0-alpha:
 
