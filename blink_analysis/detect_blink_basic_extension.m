@@ -3,8 +3,8 @@ function [onset_ind,offset_ind,onset_time,offset_time,nblink] = detect_blink_bas
 % prior and after the blink
 % methods 2
 
-onset_time = edf.default_events.Eblink.start' - set.blink.extend;
-offset_time = edf.default_events.Eblink.end' + set.blink.extend;
+onset_time = edf.default_events.Eblink.start' - set.noise.blink_extend;
+offset_time = edf.default_events.Eblink.end' + set.noise.blink_extend;
 
 % get the id of the blink onset
 [a,onset_ind] = ismember(onset_time,edf.samples.time);

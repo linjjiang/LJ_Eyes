@@ -29,17 +29,23 @@ edf = get_missing_pupil(edf,set);
 % Unrealistic gaze positions
 edf = get_outside_gaze(edf,set);
 
+% Un-physiological gaze velocity and acceleration
+edf = get_extreme_gaze_vel(edf,set);
+
 % Extremely large or small pupil values
+% Must run this function after detecting blink and missing samples
 edf = get_extreme_pupil(edf,set);
 
 % Extremely large dilation/constriction speed and edge artifacts
+% Must run this function after detecting blink and missing samples
 edf = get_extreme_pupil_vel(edf,set);
 
 %% Concatenate indexes of all the artifacts
 
 % unique indexes of tracklosses
-edf.trackloss.all_ind = unique(cat(1,edf.trackloss.blink_ind,edf.trackloss.pvel_ind,...
-    edf.trackloss.outside_ind,edf.trackloss.ext_ind,edf.trackloss.missing_ind));
+edf.trackloss.all_ind = unique(cat(1,edf.trackloss.blink_ind,edf.trackloss.missing_ind,...
+    edf.trackloss.outside_ind,edf.trackloss.gvel_ind,edf.trackloss.psize_ind,...
+    edf.trackloss.pvel_ind));
 
 % percentage of trackloss
 edf.trackloss.perc = length(edf.trackloss.all_ind)/length(edf.samples.pupil_size);

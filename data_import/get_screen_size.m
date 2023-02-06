@@ -43,7 +43,8 @@ edf.screen.yres = varargin{5};
     end
 end
 
-
+edf.screen.xpix_per_deg = tand(1/2)*edf.screen.d*2/edf.screen.w*edf.screen.xres;
+edf.screen.ypix_per_deg = tand(1/2)*edf.screen.d*2/edf.screen.h*edf.screen.yres;
 
 end
 

@@ -17,6 +17,9 @@ function edf = load_sample(edf1,varargin)
 if ~isempty(varargin)
 edf = varargin{1};
 set = varargin{2};
+data_dir = varargin{3};
+file_dir = varargin{4};
+out_dir = varargin{5};
 end
 
 % number of trials
@@ -31,15 +34,16 @@ edf.samples.pupil_size = edf1.Samples.pa;
 
 % gaze positions
 edf.samples.x = edf1.Samples.gx;
-edf.samples.y = edf1.Samples.gy;
+edf.samples.y = edf.screen.yres - edf1.Samples.gy; % Flip Y
 
 % screen pixels per degree
 edf.samples.pix_per_deg_x = edf1.Samples.rx;
 edf.samples.pix_per_deg_y = edf1.Samples.ry;
 
 % gaze positions (degree)
-edf.samples.x_deg = (edf.samples.x - edf.screen.xres/2) ./ edf.samples.pix_per_deg_x;
-edf.samples.y_deg = (edf.samples.y - edf.screen.yres/2) ./ edf.samples.pix_per_deg_y;
+% edf.samples.x_deg = (edf.samples.x - edf.screen.xres/2) ./ edf.samples.pix_per_deg_x;
+% edf.samples.y_deg = (edf.samples.y - edf.screen.yres/2) ./ edf.samples.pix_per_deg_y;
+[edf.samples.x_deg,edf.samples.y_deg] = pix2ang(edf.samples.x,edf.samples.y,edf);
 
 % default online parser events from eyelink
 edf.default_events = edf1.Events; 
@@ -65,6 +69,11 @@ end
 
 edf.screen.xlim = edf.screen.xres/edf.samples.pix_per_deg_x(1);
 edf.screen.ylim = edf.screen.yres/edf.samples.pix_per_deg_y(1);
+
+% data directory
+edf.dir.data_dir = data_dir;
+edf.dir.file_dir = file_dir; 
+edf.dir.out_dir = out_dir;
 
 end
 

@@ -18,7 +18,7 @@ tStart = tic;
 file = dir([top_dir,file_dir,'*.edf']); 
 
 % set up the output directory
-out_dir1 = [top_dir,file_dir,out_dir];
+out_dir1 = [top_dir,file_dir,out_dir]; 
 if ~isfolder(out_dir1)
     mkdir(out_dir1)
 end

@@ -19,7 +19,7 @@ function edf = detect_blink(edf,set)
 % 1. left, 2.right, 3.binocular
 
 if set.eye ~= 3 % monocular analysis
-    switch set.blink.methods
+    switch set.noise.blink_method
         case 1 % basic
             [onset_ind,offset_ind,onset_time,offset_time,nblink] = detect_blink_basic(edf,set);
         case 2 % basic + extension
