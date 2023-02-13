@@ -106,7 +106,6 @@ data_nnan = qa.nnan_run./16.*100;
 data_nnan(unique(row),:) = nan;
 
 % row 1, 10, 14
-
 % data1 = data_nnan(:,1:4);
 % data2 = data_nnan(:,5:8);
 % 
@@ -157,7 +156,7 @@ ylim([0 80])
 box off
 %repmat([0.8500 0.3250 0.0980],4,1)
 %[repmat([0 0.4470 0.7410],4,1);],p_val,comp
-%% Get rid of the outliers
+%% Get rid of the outliers - Skip
 % for ii = 1:8
 % TF(:,ii) = isoutlier(data(:,ii));
 % end
@@ -254,12 +253,13 @@ final_sind = 1:7;%find(~isnan(data_clean(:,1))); %
 % for ii = final_sind
 %     data{ii,jj}
 % end
-ii = 4;%final_sind(1);
+for ii = 1:7
+%ii = 4;%final_sind(1);
 final_tr = 1:16;
 sample_rate = data{1,1}.record.sample_rate;
 x_trial_all_mat = []; y_trial_all_mat = []; tarx = []; tary = [];
 x_trial_all_flip_mat = []; y_trial_all_flip_mat = [];
-for jj = 2%1:4
+for jj = 1:4
 % 1, start
 % 2, fixation
 % 3, 5, 7, 9, targets
@@ -326,7 +326,7 @@ y_trial_all_flip{jj,1} = y_trial_all{jj,1}.*(-ysign)';
 
 end
 
-for jj = 2%1:4
+for jj = 1:4
 %    final_tr =  find(~isnan(data{ii,jj}.cal.primary_sac_err)); % valid trials
 
 x_trial_all_mat = [x_trial_all_mat,[x_trial_all{jj,1};nan(max(run_len)-run_len(jj),length(final_tr))]];
@@ -336,7 +336,6 @@ y_trial_all_flip_mat = [y_trial_all_flip_mat,[y_trial_all_flip{jj,1};nan(max(run
 
 end
 
-%%
 % plot
 figure(1);clf
 h = plot(x_trial_all_mat,y_trial_all_mat)
@@ -346,6 +345,10 @@ hold on
 scatter(tarx,tary,30,'k','+')
 box off
 axis equal
+xlabel('Screen X (dva)')
+ylabel('Screen Y (dva)')
+set(gca,'FontSize',20)
+saveas(figure(1),[subs_id{ii},'_space.png'])
 %axis off
 % %%
 % % plot gaze path
@@ -365,7 +368,7 @@ axis equal
 % hold on
 % end
 
-%% flip x/y and replot gaze path
+% flip x/y and replot gaze path
 % xsign = sign(data{1, 1}.param.tarx_deg(1:16));
 % ysign = sign(data{1, 1}.param.tary_deg(1:16));
 % 
@@ -375,24 +378,26 @@ axis equal
 
 tm = (1:max(run_len))/sample_rate;
 figure(3);clf
-for ii = 1:size(x_trial_all_flip_mat,2)
-plot(tm,x_trial_all_flip_mat(:,ii),'Color',[0 0.4470 0.7410],'LineWidth',1)
+for kk = 1:size(x_trial_all_flip_mat,2)
+plot(tm,x_trial_all_flip_mat(:,kk),'Color',[0 0.4470 0.7410],'LineWidth',1)
 hold on
-plot(tm,y_trial_all_flip_mat(:,ii),'Color',[0.8500 0.3250 0.0980],'LineWidth',1)
+plot(tm,y_trial_all_flip_mat(:,kk),'Color',[0.8500 0.3250 0.0980],'LineWidth',1)
 hold on
 end
 
 xlim([0 15])
 ylim([-8 8])
 
-for ii = 1:length(ev_plot)-1
-line([ev_plot(ii) ev_plot(ii)]/1000,[-8 8],'Color','k','LineStyle','--');
+for kk = 1:length(ev_plot)-1
+line([ev_plot(kk) ev_plot(kk)]/1000,[-8 8],'Color','k','LineStyle','--');
 hold on
 end
 
 xlabel('Time (sec)')
 ylabel('Gaze Position (dva)')
 set(gca,'FontSize',20)
+saveas(figure(3),[subs_id{ii},'_tm.png'])
+end
 % %% average gaze path
 % tm = (1:max(run_len))*2/1000;
 % 
@@ -614,8 +619,6 @@ ylabel('Latency (ms)')
 saveas(figure(4),[subs_id{ii},'_rt_img.jpg']);
 
 end
-
-
 
 %% heatmap
 % quadrant cue vs. order cue, one subject
@@ -1077,7 +1080,7 @@ p_val = p(p <= 0.05);
 comp = comp_all(p <= 0.05); 
 
 figure(1);clf
-boxWithDots3(temp,{'Q1','Q2','Q3','Q4'},0,...
+boxWithDots3(temp,{'Q1','Q2','Q3','Q4'},1,...
    [repmat([0 0.4470 0.7410],4,1);],p_val,comp) % repmat([0.8500 0.3250 0.0980],4,1)
 
 xlabel('Encoding Order')
@@ -1113,7 +1116,7 @@ p_val = p(p <= 0.05);
 comp = comp_all(p <= 0.05); 
 
 figure(1);clf
-boxWithDots3(temp,{'Q1','Q2','Q3','Q4'},0,...
+boxWithDots3(temp,{'Q1','Q2','Q3','Q4'},1,...
    [repmat([0 0.4470 0.7410],4,1);],p_val,comp) % repmat([0.8500 0.3250 0.0980],4,1)
 
 xlabel('Encoding Order')
