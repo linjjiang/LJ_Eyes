@@ -47,6 +47,10 @@ edf.trackloss.all_ind = unique(cat(1,edf.trackloss.blink_ind,edf.trackloss.missi
     edf.trackloss.outside_ind,edf.trackloss.gvel_ind,edf.trackloss.psize_ind,...
     edf.trackloss.pvel_ind));
 
+% store artifact indexes in samples
+edf.samples.is_artifact = zeros(size(edf.samples.time));
+edf.samples.is_artifact(edf.trackloss.all_ind) = 1;
+
 % percentage of trackloss
 edf.trackloss.perc = length(edf.trackloss.all_ind)/length(edf.samples.pupil_size);
 

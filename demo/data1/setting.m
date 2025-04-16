@@ -2,7 +2,7 @@ function set = setting()
 % settings for eye-tracking analysis
 % please change the value directly below based on your analysis preferences
 
-%% The sequence of the messages within a trial
+%% The sequence of the messages within a trial %jen-what is f and H
 set.msg = {'Trial No',...
 'Starting - Fixation cross',...
 'Starting - Stimuli',...
@@ -103,7 +103,7 @@ set.bcorr.method = 1; % 1, substractive; 2, divisive
 % or median of the baseline period throughout the task
 set.bcorr.base_method = 2; % 1, mean; 2, median of the baseline values
 
-%% Which trial to plot
+%% Which trial to plot %jen why is it 5?
 set.plot.trial_srt = 1; % start trial of plotting
 set.plot.trial_end = 5; % end trial of plotting
 

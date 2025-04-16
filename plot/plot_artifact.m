@@ -1,4 +1,4 @@
-function plot_artifact(edf,top_dir,file_dir,out_dir,set)
+function plot_artifact(edf,out_dir,set)
 % Plot artifacts across trials
 
 p = edf.samples.pupil_size(:,set.eye);
@@ -13,7 +13,7 @@ outside_ind = edf.trackloss.outside_ind;
 pvel_ind = edf.trackloss.pvel_ind;
 gvel_ind = edf.trackloss.gvel_ind;
 
-f1 = figure(1);clf
+f1 = figure('Visible','Off');clf
 h{1} = histogram(p);
 hold on
 h{2} = plot(p(blink_ind),zeros(length(blink_ind),1),'+');
@@ -29,13 +29,13 @@ legend(str)
 xlabel('Pupil Size')
 ylabel('Frequency')
 title('Artifacts in pupil size distribution')
-saveas(f1,[top_dir,file_dir,out_dir,'art_pupil_distribution','id_',edf.ID,'.jpg'])
+saveas(f1,fullfile(out_dir,['art_pupil_distribution','id_',edf.ID,'.jpg']))
 
 for ii = set.plot.trial_srt:set.plot.trial_end
 
 ind_trial = find(edf.samples.trial == ii);
 
-f2 = figure(2);clf
+f2 = figure('Visible','Off');clf
 f2.Position = [0 0 1500 500];
 subplot(1,3,1)
 h{1} = plot(time(ind_trial),p(ind_trial));
@@ -99,7 +99,7 @@ legend(str)
 xlabel('Time (s)')
 ylabel('Vertical Eye Position (deg)')
 title('Artifacts in gaze y time course')
-saveas(f2,[top_dir,file_dir,out_dir,'artifact_trial',num2str(ii),'_',edf.ID,'.jpg'])
+saveas(f2,fullfile(out_dir,['artifact_trial',num2str(ii),'_',edf.ID,'.jpg']))
 %pause
 end
 

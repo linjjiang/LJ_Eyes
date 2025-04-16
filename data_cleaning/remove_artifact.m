@@ -24,6 +24,7 @@ diff_ind = diff(hypo_array); % calculate difference between the array
 clean_dist = ceil(set.clean.dist /(1000/edf.record.sample_rate)); % How many samples to interpolate prior and after
 srt_nan = find(diff_ind == 1) + 1; % start of an nan array
 end_nan = find(diff_ind == -1); % end of an nan array
+if ~isempty(srt_nan) & ~isempty(end_nan)
 if srt_nan(1) > end_nan(1)
 srt_nan(2:end+1) = srt_nan;
 srt_nan(1) = 1;
@@ -31,6 +32,12 @@ end
 if srt_nan(end) > end_nan(end)
     end_nan(end+1) = length(hypo_array);
 end
+elseif isempty(srt_nan)
+    srt_nan = 1;
+elseif isempty(end_nan)
+    end_nan = length(hypo_array);
+end
+
 % if the nearby two nan arrays are closer than the minimum distance index,
 % then merge these two
 [srt_nan_new,end_nan_new] = merger(srt_nan,end_nan,clean_dist);

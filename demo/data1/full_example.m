@@ -181,13 +181,6 @@ edf = detect_saccades(edf,set);
 % Plot the events
 miniEye_ver0;
 
-%% Step 6 Select events of interest
-% Asign AOI to the target etc.
-
-%% Step 7 Group trials based on their experimental conditions
-
-%% Step 8 Statistical analysis and plotting
-
 
 
 

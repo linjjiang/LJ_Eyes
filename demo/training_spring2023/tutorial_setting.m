@@ -88,7 +88,7 @@ set.sac.dur_threshold = 8; % duration threshold for saccades (ms)
 
 % Saccade selection criteria
 set.sac.err = 3.5; % we want to select saccades within 3.5 dva from the target
-set.sac.msg = 5; % we want to select saccades that start after message 5 (cue or saccade)
+set.sac.msg = 5; % we want to select saccades that start after message 11 or 12 (cue or saccade)
 % did not use the following criteria
 % set.sac.fixdur = 50; % we want to select saccades followed by a fixation of at least 50 ms
 

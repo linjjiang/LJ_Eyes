@@ -1,4 +1,4 @@
-%% Step 8 Statistical analysis and plotting tutorial
+%% Statistical analysis and plotting tutorial
 % For the mgs task
 
 clear
@@ -404,6 +404,65 @@ axis equal
 saveas(figure(1),[subs_id{ii},'_heatmap.jpg'])
 end
 
+%% Heatmap example code
+figure(1);clf % set up the figure
+cbottom = 0; ctop = .15; % lower bound and upper bound of the colorbar. 
+% In other words, the lowest probability density displayed is 0 and the
+% highest probability density displayed is 0.15.
+
+xerr = reshape(XERR{pp},[],1); % this is the x error in dva (should be a n x 1 vector)
+yerr = reshape(YERR{pp},[],1); % this is the y error in dva
+
+x_values = [-3:0.1:3]; % the window you want to plot. here I only estimated
+% and plot errors within plus and minus 3 dva from the target. if you want
+% to plot a larger area, e.g., 5 dva, then you will need to change -3 and 3
+% to -5 to 5. 0.1 is the step size of the estimation. Smaller step size
+% will give you a smoother plot.
+
+% Estimate a continuous pdf from the data
+[pdfx xi]= ksdensity(xerr,x_values); % use the ksdensity function to estimate pdf from the data
+[pdfy yi]= ksdensity(yerr,x_values); % do it along the x and y dimension separately
+
+% Create 2-d grid of the space you want to estimate.
+[xxi,yyi]     = meshgrid(xi,yi);
+[pdfxx,pdfyy] = meshgrid(pdfx,pdfy);
+
+% Calculate combined pdf, under assumption of independence
+pdfxy = pdfxx.*pdfyy; 
+
+% Plot the results
+h = surf(xxi,yyi,pdfxy,'linestyle','none'); % do a surf plot
+shading interp % remove the lines
+caxis manual % manually set up the color bar, defined below by cbottom and ctop
+caxis([cbottom ctop]);
+set(gca,'XLim',[-3 3],'XTick',[-3 0 3],'FontSize',14)
+set(gca,'YLim',[-3 3],'YTick',[-3 0 3])
+
+% Define the color map. This is my favoriate. You can also use other types
+% of colormaps you want.
+c=jet(100);
+colormap(c(1:100,:));
+view(2) % surf gives us a 3d plot, but we want to show a 2d heatmap. this
+% command will adjust the angle of the 3d plot so that the final plot looks
+% like a 2d heatmap.
+
+% hold on, we want to plot more things on top of the heatmp
+hold on
+z_max = max(max(get(h,'Zdata')));
+% we want to plot each individual datapoints
+scatter3(xerr,yerr,z_max*ones(size(xerr)),5,'MarkerEdgeColor','none','MarkerFaceColor',[1 1 1]) 
+view(2)
+
+hold on
+% we also want to plot the (0,0) point using a cross
+h1 = scatter3(0,0,1,700,'+','MarkerEdgeColor','k',...
+   'MarkerFaceColor','none','LineWidth',5); %uint8([255 255 255])
+colorbar('location','Manual', 'position', [0.93 0.2 0.02 0.6]);
+set(gca,'XTick',[],'YTick',[])
+axis equal
+
+% save the figure
+saveas(figure(1),'heatmap.jpg')
 %% aggergate data
 %mkdir('cue')
 %cd cue
