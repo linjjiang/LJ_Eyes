@@ -1,12 +1,13 @@
-function edf = detect_saccades(edf,set)
+function edf = detect_saccades_after_dc(edf,set)
 % Detect saccades in the samples based on the criteria set in "settings"
+% after drift correction
 
-vel = edf.samples.vel_deg_clean(:,set.eye);
-acc = edf.samples.acc_deg_clean(:,set.eye);
-xPos = edf.samples.x_deg_clean(:,set.eye);
-yPos = edf.samples.y_deg_clean(:,set.eye);
-xPos_pix = edf.samples.x_clean(:,set.eye);
-yPos_pix = edf.samples.y_clean(:,set.eye);
+vel = edf.samples.vel_deg_clean_dc(:,set.eye);
+acc = edf.samples.acc_deg_clean_dc(:,set.eye);
+xPos = edf.samples.x_deg_clean_dc(:,set.eye);
+yPos = edf.samples.y_deg_clean_dc(:,set.eye);
+xPos_pix = edf.samples.x_clean_dc(:,set.eye);
+yPos_pix = edf.samples.y_clean_dc(:,set.eye);
 
 vel_th = set.sac.vel_threshold; % velocity threshold
 acc_th = set.sac.acc_threshold; % acceleration threshold
@@ -17,25 +18,25 @@ ntr = edf.samples.ntrial;
 
 % saccade detection
 % preallocate memory
-edf.events.sac.trial = [];
-edf.events.sac.msg_srt = [];
-edf.events.sac.msg_end = [];
-edf.events.sac.ind_srt = [];
-edf.events.sac.ind_end = [];
-edf.events.sac.x_srt = [];
-edf.events.sac.y_srt = [];
-edf.events.sac.x_end = [];
-edf.events.sac.y_end = [];
-edf.events.sac.x_srt_pix = [];
-edf.events.sac.y_srt_pix = [];
-edf.events.sac.x_end_pix = [];
-edf.events.sac.y_end_pix = [];
-edf.events.sac.amp = [];
-edf.events.sac.peak_vel = [];
-edf.events.sac.avg_vel = [];
-edf.events.sac.peak_acc = [];
-edf.events.sac.dur = [];
-edf.events.sac.artifact = [];
+edf.events.sac_dc.trial = [];
+edf.events.sac_dc.msg_srt = [];
+edf.events.sac_dc.msg_end = [];
+edf.events.sac_dc.ind_srt = [];
+edf.events.sac_dc.ind_end = [];
+edf.events.sac_dc.x_srt = [];
+edf.events.sac_dc.y_srt = [];
+edf.events.sac_dc.x_end = [];
+edf.events.sac_dc.y_end = [];
+edf.events.sac_dc.x_srt_pix = [];
+edf.events.sac_dc.y_srt_pix = [];
+edf.events.sac_dc.x_end_pix = [];
+edf.events.sac_dc.y_end_pix = [];
+edf.events.sac_dc.amp = [];
+edf.events.sac_dc.peak_vel = [];
+edf.events.sac_dc.avg_vel = [];
+edf.events.sac_dc.peak_acc = [];
+edf.events.sac_dc.dur = [];
+edf.events.sac_dc.artifact = [];
 edf.samples.is_saccade = zeros(size(edf.samples.time)); % does this sample belong to a saccade
 
 %%
@@ -89,27 +90,27 @@ for ii = 1:ntr % for each trial
                         end
 
                         % store saccade info
-                        edf.events.sac.trial = [edf.events.sac.trial;ii];
-                        edf.events.sac.msg_srt = [edf.events.sac.msg_srt;epoch_on];
-                        edf.events.sac.msg_end = [edf.events.sac.msg_end;epoch_off];
-                        edf.events.sac.ind_srt = [edf.events.sac.ind_srt;saccade(1)];
-                        edf.events.sac.ind_end = [edf.events.sac.ind_end;saccade(2)];
+                        edf.events.sac_dc.trial = [edf.events.sac_dc.trial;ii];
+                        edf.events.sac_dc.msg_srt = [edf.events.sac_dc.msg_srt;epoch_on];
+                        edf.events.sac_dc.msg_end = [edf.events.sac_dc.msg_end;epoch_off];
+                        edf.events.sac_dc.ind_srt = [edf.events.sac_dc.ind_srt;saccade(1)];
+                        edf.events.sac_dc.ind_end = [edf.events.sac_dc.ind_end;saccade(2)];
                         
-                        edf.events.sac.x_srt = [edf.events.sac.x_srt;xPos(saccade(1))];
-                        edf.events.sac.y_srt = [edf.events.sac.y_srt;yPos(saccade(1))];
-                        edf.events.sac.x_end = [edf.events.sac.x_end;xPos(saccade(2))];
-                        edf.events.sac.y_end = [edf.events.sac.y_end;yPos(saccade(2))];
-                        edf.events.sac.x_srt_pix = [edf.events.sac.x_srt_pix;xPos_pix(saccade(1))];
-                        edf.events.sac.y_srt_pix = [edf.events.sac.y_srt_pix;yPos_pix(saccade(1))];
-                        edf.events.sac.x_end_pix = [edf.events.sac.x_end_pix;xPos_pix(saccade(2))];
-                        edf.events.sac.y_end_pix = [edf.events.sac.y_end_pix;yPos_pix(saccade(2))];
+                        edf.events.sac_dc.x_srt = [edf.events.sac_dc.x_srt;xPos(saccade(1))];
+                        edf.events.sac_dc.y_srt = [edf.events.sac_dc.y_srt;yPos(saccade(1))];
+                        edf.events.sac_dc.x_end = [edf.events.sac_dc.x_end;xPos(saccade(2))];
+                        edf.events.sac_dc.y_end = [edf.events.sac_dc.y_end;yPos(saccade(2))];
+                        edf.events.sac_dc.x_srt_pix = [edf.events.sac_dc.x_srt_pix;xPos_pix(saccade(1))];
+                        edf.events.sac_dc.y_srt_pix = [edf.events.sac_dc.y_srt_pix;yPos_pix(saccade(1))];
+                        edf.events.sac_dc.x_end_pix = [edf.events.sac_dc.x_end_pix;xPos_pix(saccade(2))];
+                        edf.events.sac_dc.y_end_pix = [edf.events.sac_dc.y_end_pix;yPos_pix(saccade(2))];
 
-                        edf.events.sac.amp = [edf.events.sac.amp;euclidDist];
-                        edf.events.sac.peak_vel = [edf.events.sac.peak_vel;peakVelocity];
-                        edf.events.sac.avg_vel = [edf.events.sac.peak_vel;avgVelocity];
-                        edf.events.sac.peak_acc = [edf.events.sac.peak_acc;peakAcceleration];
-                        edf.events.sac.dur = [edf.events.sac.dur;dur];
-                        edf.events.sac.artifact = [edf.events.sac.artifact;art];
+                        edf.events.sac_dc.amp = [edf.events.sac_dc.amp;euclidDist];
+                        edf.events.sac_dc.peak_vel = [edf.events.sac_dc.peak_vel;peakVelocity];
+                        edf.events.sac_dc.avg_vel = [edf.events.sac_dc.peak_vel;avgVelocity];
+                        edf.events.sac_dc.peak_acc = [edf.events.sac_dc.peak_acc;peakAcceleration];
+                        edf.events.sac_dc.dur = [edf.events.sac_dc.dur;dur];
+                        edf.events.sac_dc.artifact = [edf.events.sac_dc.artifact;art];
 
                         % store it in a variable is_saccade to indicate
                         % whether this sample is a saccade

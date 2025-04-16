@@ -1,4 +1,4 @@
-function edf1 = edf2mat(top_dir,file_dir,out_dir)
+function edf1 = edf2mat(file_dir,out_dir)
 
 % Inputs:
 % top_dir: where you store all your data, e.g., 'Users/Ashley/data/'
@@ -15,17 +15,16 @@ fprintf('\n')
 tStart = tic;
 
 % get the file name & path
-file = dir([top_dir,file_dir,'*.edf']); 
+file = dir(fullfile(file_dir,'*.edf')); 
 
 % set up the output directory
-out_dir1 = [top_dir,file_dir,out_dir]; 
-if ~isfolder(out_dir1)
-    mkdir(out_dir1)
+if ~isfolder(out_dir)
+    mkdir(out_dir)
 end
 
 for ii = 1:length(file)
 % full file path
- full_file_path = [file(ii).folder,'/',file(ii).name];
+ full_file_path = fullfile(file(ii).folder,file(ii).name);
 
 % check if the file exists
 if ~exist(full_file_path)
@@ -40,7 +39,7 @@ edf1 = Edf2Mat(file(ii).name);
 fprintf('\n');
 fprintf('saving .mat file...');
 filename = erase(file(ii).name,'.edf');
-save([out_dir1,filename,'.mat'],'edf1');
+save(fullfile(out_dir,[filename,'.mat']),'edf1');
 end
 
 tEnd = toc(tStart);

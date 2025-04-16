@@ -25,6 +25,7 @@ if set.eye ~= 3 % monocular analysis
         case 2 % basic + extension
             [onset_ind,offset_ind,onset_time,offset_time,nblink] = detect_blink_basic_extension(edf,set);
         case 3 % velocity algorithm
+             [onset_ind,offset_ind,onset_time,offset_time,nblink] = detect_blink_vel(edf,set);
         case 4
             [onset_ind,offset_ind,onset_time,offset_time,nblink] = detect_blink_noise(edf,set);
     end
