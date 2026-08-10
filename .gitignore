@@ -29,3 +29,10 @@ codegen/
 
 # Octave session info
 octave-workspace
+# Generated outputs — never commit results
+demo/**/result/
+*.mat
+*.edf
+
+# OS cruft
+.DS_Store

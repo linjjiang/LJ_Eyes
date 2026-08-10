@@ -1,75 +1,120 @@
-# LJ_Eyes: An Automated Eye-Tracking Analysis Toolbox
+# LJ_Eyes
 
-LJ_Eyes is a comprehensive, end-to-end eye-tracking analysis pipeline built in MATLAB. It streamlines preprocessing, quality control, feature extraction, and visualization, enabling efficient and customizable analysis of eye-tracking data.
+A MATLAB toolbox for preprocessing eye-tracking recordings from SR Research EyeLink
+trackers: blink and artifact removal, drift correction, and saccade/fixation detection.
+It is for researchers and analysts who have `.edf` recordings and need cleaned samples and
+labelled events out the other end. Analyses are run from scripts; a small GUI is included
+for inspecting recordings by eye. It replaced a manual, per-recording workflow in our lab
+and cut preprocessing time per session by roughly 10–20×.
 
-## Description
+Requires MATLAB R2019b or newer. Processing your own data additionally requires
+[Edf2Mat](https://github.com/uzh/edf-converter) for `.edf` import; the demo below does not.
 
-LJ_Eyes supports the following key functionalities:
-* Import raw eye-tracking data into MATLAB-friendly format
-* Perform artifact detection and quality checks
-* Apply data denoising techniques
-* Conduct preliminary pupil and blink analyses
-* Extract key features (e.g., saccades and fixations) during task-relevant epochs
-* Visualize data using a user-friendly Graphical User Interface (GUI)
+## Quickstart
 
-
-Core features of this toolbox:
-* Transparency:
-All analysis parameters are stored in a single settings.m file, allowing for easy review and adjustment.
-* Flexibility
-Offers a variety of preprocessing and analysis options (e.g., blink removal methods, saccade classification algorithms) to suit different research needs.
-* Automation
-Once the settings are configured, the entire pipeline can be executed via a single script—just one click to run the full analysis.
-
-## Getting Started
-
-### Dependencies
-
-* Edf2Mat© Matlab Toolbox: https://github.com/uzh/edf-converter
-* MATLAB R2019b or higher version.
-* Input eye data must be collected by SR Research Eyelink eye-tracker and in .edf format.
-
-### Installing
-
-* Install Edf2Mat© Matlab Toolbox: https://github.com/uzh/edf-converter
-* Download the repo, add it to your matlab path.
-```
-addpath(genpath("./LJ_Eyes"))
-```
-* You are ready to go!
-
-### Executing program
-
-I provided two examples of how to use this toolbox under the demo/ folder:
-* data1: a basic example of analyzing eye data using this toolbox, from raw eye data import to event (ex. saccade) segmentation.
-```
-open setting.m # open and check settings before running the main script.
-run full_example.m # run the main processing script.
-```
-* training_spring2023: a more detailed tutorial of analyzing actual eye data I collected. This tutorial comes from a training session I gave to my lab in spring 2023.
-```
-open tutorial_setting.m # open and check settings before running the main script.
-run preprocess_tutorial.m # run the main processing script.
-open preprocess_assignment.m # optional: complete an assignment I designed to understand the scripts & analysis in depth ;)
+```matlab
+addpath(genpath(pwd))   % from the repo root
+run_demo                % generate a synthetic recording, preprocess it, check the output
 ```
 
-## Help & Potential Issues
+`run_demo` builds a recording with known saccades and blinks, runs the full pipeline, and
+reports whether the detectors recovered what was injected:
 
+```
+Synthetic recording: 8 trials, 16000 samples at 500 Hz
+Injected: 16 saccades, 8 blinks
 
-## Authors
+Blinks detected:      8  (injected 8)
+Samples flagged:      6.41%
+Saccades detected:    16  (injected 16)
+Median amplitude:     11.9 deg  (injected 12.0)
+```
 
-Linjing Jiang
-[@linjjiang](https://github.com/linjjiang)
+No participant data ships with this repository, by design. `make_synthetic_recording.m`
+generates its input, so the demo doubles as a smoke test: it has ground truth, so a
+regression in the detectors shows up as a failed check rather than a plot that looks
+plausible.
 
-## Version History
+To run the pipeline on a real recording, replace section 1 of `run_demo.m` with the
+`edf2mat` / `get_params` / `load_sample` calls documented at the top of that file. Every
+analysis parameter lives in the settings struct; no thresholds are set inside the
+processing functions.
 
-* 0.1
-    * Initial Release
+## Inspecting a recording
+
+`myGUI_miniEye/miniEye_ver0.mlapp` plots one trial at a time. You can step through trials,
+switch the y-axis between pupil and gaze channels, compare raw against cleaned samples,
+scrub a time window, and toggle overlays for detected fixations, saccades, and trial
+messages. It is a viewer only — it does not run or modify the pipeline, and detected
+events cannot be edited from it.
+
+## What it does
+
+**Import** — reads `.edf` via Edf2Mat and pulls out sampling rate, recorded eye, screen
+geometry, and the calibration/validation results. Converts between pixels and degrees of
+visual angle, and computes gaze velocity and acceleration with a five-sample differentiator
+(Engbert & Kliegl).
+
+**Artifact detection** — flags samples as missing pupil, gaze outside the screen bounds,
+extreme gaze velocity/acceleration, extreme pupil size, or extreme pupil velocity, the last
+two in median-absolute-deviation units. Artifacts closer than a configurable gap are
+merged. Reports per-recording track-loss percentage and blink count.
+
+**Blink detection** — four selectable methods: the EyeLink parser's own blink events; those
+events padded by a configurable window; a velocity-based method (Mathôt, 2013); and a
+noise-based method (Hershman et al., 2018).
+
+**Cleaning** — removes flagged samples, then optionally linear or spline interpolation
+across gaps, Savitzky–Golay smoothing, and pupil baseline correction (subtractive or
+divisive, against the mean or median of a baseline epoch).
+
+**Drift correction** — estimates and removes slow gaze drift, with saccade and fixation
+detection re-run on the corrected signal.
+
+**Event detection** — segments trials and task epochs from EyeLink messages, then detects
+saccades using joint velocity, acceleration, amplitude, and duration thresholds, and
+detects fixations. Computes saccade endpoints and merges saccades split by noise. Helpers
+select the primary saccade per trial.
+
+**Plotting** — raw and cleaned time courses, artifact distributions, and gaze-on-screen
+plots.
+
+## Layout
+
+```
+data_import/        .edf import, recording and screen parameters, calibration
+data_cleaning/      artifact detection, removal, interpolation, smoothing, drift correction
+blink_analysis/     the four blink detection methods
+event_detection/    trial/epoch segmentation, saccade and fixation detection
+event_selection/    per-trial selection of saccades of interest
+plot/               figure generation
+myGUI_miniEye/      the inspection GUI
+general_functions/  unit conversion and shared helpers
+external_functions/ vendored third-party code (own licenses)
+demo/               synthetic recording generator and the demo script
+```
+
+## Status and limitations
+
+Research code, written for my own and my labmates' use. Scope worth knowing before you
+adopt it:
+
+- Trial and epoch segmentation is driven by the message strings in the settings struct,
+  which are experiment-specific. Applying the toolbox to a new paradigm means editing that
+  list, and possibly the event-selection step.
+- Only monocular analysis is exercised. The binocular option is present but untested.
+- `run_demo` is the only automated check; there is no unit test suite.
+- `blink_analysis/blink_Nystrom.m` is an unfinished port and is not wired into the pipeline.
+- No participant data is distributed with this repository and none will be. If you need to
+  validate against a real recording, use your own.
 
 ## License
 
-This project is licensed under the BSD-3-Clause License - see the LICENSE.md file for details
+BSD 3-Clause — see [LICENSE](LICENSE). Vendored code under `external_functions/` and parts
+of `general_functions/` carries its own licenses.
 
-## Acknowledgments
+## Credits
 
-* [Edf2Mat©](https://github.com/uzh/edf-converter)
+[Edf2Mat](https://github.com/uzh/edf-converter) (UZH) for `.edf` reading. Blink detection
+after Mathôt (2013) and Hershman, Henik & Cohen (2018). Velocity/acceleration after Engbert
+& Kliegl (2003).

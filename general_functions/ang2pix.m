@@ -3,7 +3,6 @@ function [X,Y] = ang2pix(angX,angY,edf)
 % the x,y axis
 % By: Linjing Jiang
 % Date: 11/08/18
-% Contact: linjing.jiang@stonybrook.edu
 
 % Input: disp
    % disp.dist = distance from the screen center to the eye (in cm)
