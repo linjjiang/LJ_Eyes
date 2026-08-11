@@ -1,14 +1,25 @@
 # LJ_Eyes
 
-A MATLAB toolbox for preprocessing eye-tracking recordings from SR Research EyeLink
-trackers: blink and artifact removal, drift correction, and saccade/fixation detection.
-It is for researchers and analysts who have `.edf` recordings and need cleaned samples and
-labelled events out the other end. Analyses are run from scripts; a small GUI is included
-for inspecting recordings by eye. It replaced a manual, per-recording workflow in our lab
-and cut preprocessing time per session by roughly 10–20×.
+![MATLAB R2019b+](https://img.shields.io/badge/MATLAB-R2019b%2B-blue)
+![License: BSD-3](https://img.shields.io/badge/License-BSD--3-green)
+![Platform: EyeLink](https://img.shields.io/badge/Platform-SR%20Research%20EyeLink-lightgrey)
 
-Requires MATLAB R2019b or newer. Processing your own data additionally requires
-[Edf2Mat](https://github.com/uzh/edf-converter) for `.edf` import; the demo below does not.
+An automated preprocessing toolbox for EyeLink eye-tracking recordings. Takes raw `.edf`
+files and produces cleaned gaze and pupil signals with labelled saccades, fixations, and
+blinks — replacing a manual, per-recording workflow that took roughly 10–20× longer.
+
+<p align="center">
+  <img src="docs/pipeline.svg" alt="Processing pipeline" width="100%"/>
+</p>
+
+### Key methods
+
+- **Velocity & acceleration** — five-sample differentiator (Engbert & Kliegl, 2003)
+- **Artifact detection** — median absolute deviation (MAD) for pupil size and velocity outliers
+- **Blink detection** — four selectable methods: EyeLink parser, padded window, velocity-based (Mathôt, 2013), noise-based (Hershman et al., 2018)
+- **Smoothing** — Savitzky–Golay filter, linear or spline interpolation across gaps
+- **Saccade detection** — joint velocity, acceleration, amplitude, and duration thresholds; endpoint computation; merge of noise-split saccades
+- **Synthetic test data** — minimum-jerk displacement profile for saccades, with ground-truth labels for smoke testing
 
 ## Quickstart
 
@@ -17,8 +28,8 @@ addpath(genpath(pwd))   % from the repo root
 run_demo                % generate a synthetic recording, preprocess it, check the output
 ```
 
-`run_demo` builds a recording with known saccades and blinks, runs the full pipeline, and
-reports whether the detectors recovered what was injected:
+<details>
+<summary>Expected output</summary>
 
 ```
 Synthetic recording: 8 trials, 16000 samples at 500 Hz
@@ -29,18 +40,22 @@ Samples flagged:      6.41%
 Saccades detected:    16  (injected 16)
 Median amplitude:     11.9 deg  (injected 12.0)
 ```
+</details>
 
 No participant data ships with this repository, by design. `make_synthetic_recording.m`
-generates its input, so the demo doubles as a smoke test: it has ground truth, so a
-regression in the detectors shows up as a failed check rather than a plot that looks
-plausible.
+generates its input, so the demo doubles as a smoke test — a regression in the detectors
+shows up as a failed check rather than a plot that looks plausible.
 
-To run the pipeline on a real recording, replace section 1 of `run_demo.m` with the
-`edf2mat` / `get_params` / `load_sample` calls documented at the top of that file. Every
-analysis parameter lives in the settings struct; no thresholds are set inside the
-processing functions.
+To process a real recording, replace section 1 of `run_demo.m` with the
+`edf2mat` / `get_params` / `load_sample` calls documented at the top of that file.
+Processing your own data requires [Edf2Mat](https://github.com/uzh/edf-converter) for
+`.edf` import; the demo does not.
 
 ## Inspecting a recording
+
+<p align="center">
+  <img src="docs/gui_screenshot.png" alt="miniEye GUI — pupil time course with trial navigation" width="700"/>
+</p>
 
 `myGUI_miniEye/miniEye_ver0.mlapp` plots one trial at a time. You can step through trials,
 switch the y-axis between pupil and gaze channels, compare raw against cleaned samples,
@@ -48,36 +63,20 @@ scrub a time window, and toggle overlays for detected fixations, saccades, and t
 messages. It is a viewer only — it does not run or modify the pipeline, and detected
 events cannot be edited from it.
 
-## What it does
+## Processing pipeline
 
-**Import** — reads `.edf` via Edf2Mat and pulls out sampling rate, recorded eye, screen
-geometry, and the calibration/validation results. Converts between pixels and degrees of
-visual angle, and computes gaze velocity and acceleration with a five-sample differentiator
-(Engbert & Kliegl).
+| Stage | What it does | Details |
+|-------|-------------|---------|
+| **Import** | Reads `.edf` via Edf2Mat | Sampling rate, recorded eye, screen geometry, calibration results. Converts px ↔ degrees of visual angle. |
+| **Artifact detection** | Flags bad samples | Missing pupil, gaze off screen, extreme gaze velocity/acceleration, extreme pupil size or velocity (MAD units). Merges artifacts closer than a configurable gap. |
+| **Blink detection** | Four selectable methods | EyeLink parser events; padded window; velocity-based (Mathôt, 2013); noise-based (Hershman et al., 2018). |
+| **Cleaning** | Removes flagged samples | Linear or spline interpolation, Savitzky–Golay smoothing, pupil baseline correction (subtractive or divisive, mean or median of baseline epoch). |
+| **Drift correction** | Estimates and removes slow gaze drift | Saccade and fixation detection re-run on the corrected signal. |
+| **Event detection** | Segments trials and detects events | Epochs from EyeLink messages. Saccades via joint velocity, acceleration, amplitude, and duration thresholds. Fixations. Endpoint computation, noise-split saccade merging. |
+| **Plotting** | Generates figures | Raw and cleaned time courses, artifact distributions, gaze-on-screen plots. |
 
-**Artifact detection** — flags samples as missing pupil, gaze outside the screen bounds,
-extreme gaze velocity/acceleration, extreme pupil size, or extreme pupil velocity, the last
-two in median-absolute-deviation units. Artifacts closer than a configurable gap are
-merged. Reports per-recording track-loss percentage and blink count.
-
-**Blink detection** — four selectable methods: the EyeLink parser's own blink events; those
-events padded by a configurable window; a velocity-based method (Mathôt, 2013); and a
-noise-based method (Hershman et al., 2018).
-
-**Cleaning** — removes flagged samples, then optionally linear or spline interpolation
-across gaps, Savitzky–Golay smoothing, and pupil baseline correction (subtractive or
-divisive, against the mean or median of a baseline epoch).
-
-**Drift correction** — estimates and removes slow gaze drift, with saccade and fixation
-detection re-run on the corrected signal.
-
-**Event detection** — segments trials and task epochs from EyeLink messages, then detects
-saccades using joint velocity, acceleration, amplitude, and duration thresholds, and
-detects fixations. Computes saccade endpoints and merges saccades split by noise. Helpers
-select the primary saccade per trial.
-
-**Plotting** — raw and cleaned time courses, artifact distributions, and gaze-on-screen
-plots.
+Every analysis parameter lives in the settings struct. No thresholds are set inside the
+processing functions.
 
 ## Layout
 
@@ -94,24 +93,22 @@ external_functions/ vendored third-party code (own licenses)
 demo/               synthetic recording generator and the demo script
 ```
 
-## Status and limitations
+## Scope
 
-Research code, written for my own and my labmates' use. Scope worth knowing before you
-adopt it:
+Research code, written for my own and my labmates' use.
 
 - Trial and epoch segmentation is driven by the message strings in the settings struct,
   which are experiment-specific. Applying the toolbox to a new paradigm means editing that
   list, and possibly the event-selection step.
 - Only monocular analysis is exercised. The binocular option is present but untested.
 - `run_demo` is the only automated check; there is no unit test suite.
-- `blink_analysis/blink_Nystrom.m` is an unfinished port and is not wired into the pipeline.
 - No participant data is distributed with this repository and none will be. If you need to
   validate against a real recording, use your own.
 
 ## License
 
-BSD 3-Clause — see [LICENSE](LICENSE). Vendored code under `external_functions/` and parts
-of `general_functions/` carries its own licenses.
+[BSD 3-Clause](LICENSE). Vendored code under `external_functions/` and parts of
+`general_functions/` carries its own licenses.
 
 ## Credits
 

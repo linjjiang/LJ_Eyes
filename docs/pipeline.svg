@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 90" font-family="system-ui, -apple-system, sans-serif" font-size="13">
+  <defs>
+    <style>
+      .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.2; rx: 6; }
+      .label { fill: #1f2328; text-anchor: middle; dominant-baseline: central; font-weight: 600; }
+      .sub { fill: #656d76; text-anchor: middle; dominant-baseline: central; font-size: 10px; }
+      .arrow { fill: none; stroke: #656d76; stroke-width: 1.4; marker-end: url(#ah); }
+      @media (prefers-color-scheme: dark) {
+        .box { fill: #161b22; stroke: #30363d; }
+        .label { fill: #e6edf3; }
+        .sub { fill: #8b949e; }
+        .arrow { stroke: #8b949e; }
+      }
+    </style>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9" fill="none" stroke="#656d76" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <!-- Import -->
+  <rect class="box" x="2" y="10" width="100" height="68"/>
+  <text class="label" x="52" y="34">Import</text>
+  <text class="sub" x="52" y="52">.edf → structs</text>
+  <text class="sub" x="52" y="64">px ↔ deg</text>
+  <!-- arrow -->
+  <line class="arrow" x1="104" y1="44" x2="128" y2="44"/>
+  <!-- Artifacts -->
+  <rect class="box" x="130" y="10" width="110" height="68"/>
+  <text class="label" x="185" y="34">Artifacts</text>
+  <text class="sub" x="185" y="52">blinks · trackloss</text>
+  <text class="sub" x="185" y="64">MAD outliers</text>
+  <line class="arrow" x1="242" y1="44" x2="266" y2="44"/>
+  <!-- Cleaning -->
+  <rect class="box" x="268" y="10" width="110" height="68"/>
+  <text class="label" x="323" y="34">Cleaning</text>
+  <text class="sub" x="323" y="52">interpolation</text>
+  <text class="sub" x="323" y="64">Sav-Golay · baseline</text>
+  <line class="arrow" x1="380" y1="44" x2="404" y2="44"/>
+  <!-- Drift -->
+  <rect class="box" x="406" y="10" width="100" height="68"/>
+  <text class="label" x="456" y="34">Drift</text>
+  <text class="sub" x="456" y="52">correction</text>
+  <text class="sub" x="456" y="64">re-detection</text>
+  <line class="arrow" x1="508" y1="44" x2="532" y2="44"/>
+  <!-- Events -->
+  <rect class="box" x="534" y="10" width="110" height="68"/>
+  <text class="label" x="589" y="34">Events</text>
+  <text class="sub" x="589" y="52">saccades · fixations</text>
+  <text class="sub" x="589" y="64">epoch segmentation</text>
+  <line class="arrow" x1="646" y1="44" x2="670" y2="44"/>
+  <!-- Plotting -->
+  <rect class="box" x="672" y="10" width="100" height="68"/>
+  <text class="label" x="722" y="34">Plotting</text>
+  <text class="sub" x="722" y="52">time courses</text>
+  <text class="sub" x="722" y="64">gaze on screen</text>
+</svg>
