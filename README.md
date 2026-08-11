@@ -19,7 +19,7 @@ blinks — replacing a manual, per-recording workflow that took roughly 10–20�
 - **Blink detection:** four selectable methods: EyeLink parser, padded window, velocity-based (Mathôt, 2013), noise-based (Hershman et al., 2018)
 - **Smoothing:** Savitzky–Golay filter, linear or spline interpolation across gaps
 - **Saccade detection:** joint velocity, acceleration, amplitude, and duration thresholds; endpoint computation; merge of noise-split saccades
-- **Synthetic test data:** minimum-jerk displacement profile for saccades, with ground-truth labels for smoke testing
+- **Synthetic test data:** main-sequence saccades with hypometria, corrective saccades and glissades, plus fixational drift, tremor, microsaccades, and lid-artifact blinks, with ground-truth labels for smoke testing
 
 ## Quickstart
 
@@ -36,9 +36,14 @@ Synthetic recording: 8 trials, 16000 samples at 500 Hz
 Injected: 16 saccades, 8 blinks
 
 Blinks detected:      8  (injected 8)
-Samples flagged:      6.41%
-Saccades detected:    16  (injected 16)
-Median amplitude:     11.9 deg  (injected 12.0)
+Samples flagged:      8.64%
+
+Saccades detected:    16 total, 16 large  (injected 16 large)
+Fixations detected:   80
+Median amplitude:     11.5 deg  (target at 12.0)
+Median peak velocity: 440 deg/s
+
+All checks passed.
 ```
 </details>
 
@@ -53,25 +58,45 @@ Processing your own data requires [Edf2Mat](https://github.com/uzh/edf-converter
 
 ## Inspecting a recording
 
-`myGUI_miniEye/miniEye_ver0.mlapp` is a trial-by-trial viewer for inspecting preprocessed
-recordings. It plots gaze position (x/y in degrees) or pupil size over time, with six
-display modes selectable from the Data Type dropdown:
+`myGUI_miniEye/miniEye_ver0.mlapp` is a trial-by-trial viewer for preprocessed recordings.
+`run_demo` opens it on the synthetic data; to open it on your own, put `edf` and `set` in
+the base workspace and run `miniEye_ver0`.
 
-- **Raw data** — the unprocessed signal
-- **Raw data with blinks** — raw signal with detected blink intervals marked
-- **Cleaned data** — after artifact removal and interpolation
-- **Drift corrected data** — after baseline drift correction
-- **Baseline corrected data** — pupil signal after baseline correction
-- **Raw data with artifacts** — raw signal with all flagged artifact intervals overlaid
+![miniEye viewer](docs/miniEye.png)
 
-Toggling Saccades or Fixations on overlays the detected events onto whichever mode is
-active, so you can verify that the pipeline correctly identified blinks as artifacts and
-distinguished them from real saccades. The Message toggle shows trial event markers
-(fixation onset, target onset, etc.) as vertical lines. You can step through trials, scrub
-a time window with the start/end sliders, and zoom into regions of interest.
+*Trial 1 of the synthetic recording: gaze x (blue) and y (orange), blink samples flagged,
+detected saccades in red, fixations in green, trial messages as dashed markers.*
 
-It is a viewer only — it does not run or modify the pipeline, and detected events cannot
-be edited from it.
+**Signal — Plot type (Y)**
+
+- **Gaze** — horizontal and vertical eye position, in degrees of visual angle
+- **Pupil** — pupil size, in EyeLink units
+
+**Processing stage — Data Type**
+
+- **Raw data** — the signal as recorded
+- **Raw data with blinks** — raw signal, detected blink intervals and their onsets/offsets marked
+- **Raw data with artifacts** — raw signal, every flagged artifact type overlaid
+- **Cleaned data** — after artifact removal
+- **Drift corrected data** — gaze after drift correction (pupil is unaffected, so it shows the cleaned trace)
+- **Baseline corrected data** — pupil after baseline correction
+
+**Event overlays**
+
+- **Saccades** — detected saccade intervals in red
+- **Fixations** — detected fixation intervals in green
+- **Message** — trial events as dashed vertical markers, labelled from `set.msg`
+
+**Navigation**
+
+- **Trial #** field, or **Last trial** / **Next trial**
+- **Start time** / **End time** sliders crop the window within a trial
+- **Show the whole trial** resets the window
+
+It is a viewer only: it does not run or modify the pipeline, and detected events cannot be
+edited from it. Selecting a stage the loaded recording has not been through says so on the
+axes instead of erroring — `run_demo` covers the gaze pipeline, so **Baseline corrected
+data** is one of these.
 
 ## Processing pipeline
 
