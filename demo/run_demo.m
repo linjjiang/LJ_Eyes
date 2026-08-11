@@ -78,3 +78,29 @@ if ok
 else
     fprintf(2,'Some checks failed - see above.\n');
 end
+
+%% 7. View in GUI ----------------------------------------------------------
+% The GUI reads cleaned/drift-corrected fields that the demo pipeline does
+% not produce (it stops after detection). Copy the raw signals into those
+% slots so the GUI can launch; all display modes will show the same data.
+if ~isfield(edf.samples,'x_deg_clean')
+    edf.samples.x_deg_clean       = edf.samples.x_deg;
+    edf.samples.y_deg_clean       = edf.samples.y_deg;
+    edf.samples.pupil_size_clean  = edf.samples.pupil_size;
+end
+if ~isfield(edf.samples,'x_deg_clean_drift')
+    edf.samples.x_deg_clean_drift     = edf.samples.x_deg;
+    edf.samples.y_deg_clean_drift     = edf.samples.y_deg;
+    edf.samples.pupil_size_clean_drift = edf.samples.pupil_size;
+end
+if ~isfield(edf.samples,'pupil_size_corr')
+    edf.samples.pupil_size_corr = edf.samples.pupil_size;
+end
+if ~isfield(edf.events,'fix')
+    empty_ev = struct('ind_srt',[],'ind_end',[],'trial',[]);
+    edf.events.fix    = empty_ev;
+    edf.events.sac_dc = empty_ev;
+    edf.events.fix_dc = empty_ev;
+end
+
+miniEye_ver0;
