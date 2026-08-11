@@ -158,6 +158,53 @@ end
 edf.default_events.Messages.info = info;
 edf.default_events.Messages.time = mtime;
 
+% Pre-compute the fields that detect_epoch would produce, so the GUI can
+% open on synthetic data without running the full pipeline first.
+nmsg = numel(set.msg);
+edf.samples.msg = zeros(nsamp,1);
+edf.events.msg.ind_srt = zeros(ntrial, nmsg);
+edf.events.msg.ind_end = zeros(ntrial, nmsg);
+edf.events.msg.time    = zeros(ntrial, nmsg);
+
+for tr = 1:ntrial
+    base = (tr-1)*nsamp_trial;
+    for m = 1:nmsg
+        s = base + max(1, round(msg_offsets(m)*sample_rate));
+        if m < nmsg
+            e = base + round(msg_offsets(m+1)*sample_rate) - 1;
+        else
+            e = base + nsamp_trial;
+        end
+        edf.events.msg.ind_srt(tr,m) = s;
+        edf.events.msg.ind_end(tr,m) = e;
+        edf.events.msg.time(tr,m)    = time(s);
+        edf.samples.msg(s:e) = m;
+    end
+end
+edf.events.msg.txt = set.msg;
+
+% Stub the fields the GUI reads at startup. These are empty until the
+% pipeline fills them in — the GUI will launch but overlays will be blank.
+empty_ev = struct('ind_srt',[],'ind_end',[],'trial',[]);
+edf.events.sac    = empty_ev;
+edf.events.fix    = empty_ev;
+edf.events.sac_dc = empty_ev;
+edf.events.fix_dc = empty_ev;
+
+edf.blink.num        = 0;
+edf.blink.onset_ind  = [];
+edf.blink.offset_ind = [];
+edf.trackloss.all_ind   = [];
+edf.trackloss.blink_ind = [];
+
+edf.samples.x_deg_clean       = edf.samples.x_deg;
+edf.samples.y_deg_clean       = edf.samples.y_deg;
+edf.samples.pupil_size_clean  = edf.samples.pupil_size;
+edf.samples.x_deg_clean_drift       = edf.samples.x_deg;
+edf.samples.y_deg_clean_drift       = edf.samples.y_deg;
+edf.samples.pupil_size_clean_drift   = edf.samples.pupil_size;
+edf.samples.pupil_size_corr          = edf.samples.pupil_size;
+
 %% -------------------------------------------------------- analysis settings
 % Same parameters as demo/data1/setting.m, kept here so the demo is
 % self-contained.
