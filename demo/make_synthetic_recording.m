@@ -183,28 +183,6 @@ for tr = 1:ntrial
 end
 edf.events.msg.txt = set.msg;
 
-% Stub the fields the GUI reads at startup. These are empty until the
-% pipeline fills them in — the GUI will launch but overlays will be blank.
-empty_ev = struct('ind_srt',[],'ind_end',[],'trial',[]);
-edf.events.sac    = empty_ev;
-edf.events.fix    = empty_ev;
-edf.events.sac_dc = empty_ev;
-edf.events.fix_dc = empty_ev;
-
-edf.blink.num        = 0;
-edf.blink.onset_ind  = [];
-edf.blink.offset_ind = [];
-edf.trackloss.all_ind   = [];
-edf.trackloss.blink_ind = [];
-
-edf.samples.x_deg_clean       = edf.samples.x_deg;
-edf.samples.y_deg_clean       = edf.samples.y_deg;
-edf.samples.pupil_size_clean  = edf.samples.pupil_size;
-edf.samples.x_deg_clean_drift       = edf.samples.x_deg;
-edf.samples.y_deg_clean_drift       = edf.samples.y_deg;
-edf.samples.pupil_size_clean_drift   = edf.samples.pupil_size;
-edf.samples.pupil_size_corr          = edf.samples.pupil_size;
-
 %% -------------------------------------------------------- analysis settings
 % Same parameters as demo/data1/setting.m, kept here so the demo is
 % self-contained.
