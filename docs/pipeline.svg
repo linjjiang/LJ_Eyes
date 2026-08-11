@@ -1,55 +1,61 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 90" font-family="system-ui, -apple-system, sans-serif" font-size="13">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 80" font-family="system-ui, -apple-system, sans-serif">
   <defs>
     <style>
-      .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1.2; rx: 6; }
-      .label { fill: #1f2328; text-anchor: middle; dominant-baseline: central; font-weight: 600; }
-      .sub { fill: #656d76; text-anchor: middle; dominant-baseline: central; font-size: 10px; }
-      .arrow { fill: none; stroke: #656d76; stroke-width: 1.4; marker-end: url(#ah); }
+      .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1; rx: 8; }
+      .title { fill: #1f2328; text-anchor: middle; dominant-baseline: central; font-size: 13px; font-weight: 600; }
+      .desc { fill: #656d76; text-anchor: middle; dominant-baseline: central; font-size: 10px; }
+      .arrow { fill: none; stroke: #c8ced5; stroke-width: 1.2; marker-end: url(#arw); }
       @media (prefers-color-scheme: dark) {
         .box { fill: #161b22; stroke: #30363d; }
-        .label { fill: #e6edf3; }
-        .sub { fill: #8b949e; }
-        .arrow { stroke: #8b949e; }
+        .title { fill: #e6edf3; }
+        .desc { fill: #8b949e; }
+        .arrow { stroke: #3d444d; }
+        #arw path { stroke: #3d444d; }
       }
     </style>
-    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M 0 1 L 9 5 L 0 9" fill="none" stroke="#656d76" stroke-width="1.4"/>
+    <marker id="arw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 1.5 L 7 4 L 1 6.5" fill="none" stroke="#c8ced5" stroke-width="1.2"/>
     </marker>
   </defs>
-  <!-- Import -->
-  <rect class="box" x="2" y="10" width="100" height="68"/>
-  <text class="label" x="52" y="34">Import</text>
-  <text class="sub" x="52" y="52">.edf → structs</text>
-  <text class="sub" x="52" y="64">px ↔ deg</text>
+
+  <!-- Import recording -->
+  <rect class="box" x="0" y="6" width="130" height="62"/>
+  <text class="title" x="65" y="28">Import recording</text>
+  <text class="desc" x="65" y="50">.edf → MATLAB structs</text>
+
   <!-- arrow -->
-  <line class="arrow" x1="104" y1="44" x2="128" y2="44"/>
-  <!-- Artifacts -->
-  <rect class="box" x="130" y="10" width="110" height="68"/>
-  <text class="label" x="185" y="34">Artifacts</text>
-  <text class="sub" x="185" y="52">blinks · trackloss</text>
-  <text class="sub" x="185" y="64">MAD outliers</text>
-  <line class="arrow" x1="242" y1="44" x2="266" y2="44"/>
-  <!-- Cleaning -->
-  <rect class="box" x="268" y="10" width="110" height="68"/>
-  <text class="label" x="323" y="34">Cleaning</text>
-  <text class="sub" x="323" y="52">interpolation</text>
-  <text class="sub" x="323" y="64">Sav-Golay · baseline</text>
-  <line class="arrow" x1="380" y1="44" x2="404" y2="44"/>
-  <!-- Drift -->
-  <rect class="box" x="406" y="10" width="100" height="68"/>
-  <text class="label" x="456" y="34">Drift</text>
-  <text class="sub" x="456" y="52">correction</text>
-  <text class="sub" x="456" y="64">re-detection</text>
-  <line class="arrow" x1="508" y1="44" x2="532" y2="44"/>
-  <!-- Events -->
-  <rect class="box" x="534" y="10" width="110" height="68"/>
-  <text class="label" x="589" y="34">Events</text>
-  <text class="sub" x="589" y="52">saccades · fixations</text>
-  <text class="sub" x="589" y="64">epoch segmentation</text>
-  <line class="arrow" x1="646" y1="44" x2="670" y2="44"/>
+  <line class="arrow" x1="134" y1="37" x2="152" y2="37"/>
+
+  <!-- Artifact detection -->
+  <rect class="box" x="156" y="6" width="130" height="62"/>
+  <text class="title" x="221" y="28">Artifact detection</text>
+  <text class="desc" x="221" y="50">blinks, pupil size &amp; vel</text>
+
+  <line class="arrow" x1="290" y1="37" x2="308" y2="37"/>
+
+  <!-- Denoising -->
+  <rect class="box" x="312" y="6" width="130" height="62"/>
+  <text class="title" x="377" y="28">Denoising</text>
+  <text class="desc" x="377" y="50">Savitzky–Golay filter</text>
+
+  <line class="arrow" x1="446" y1="37" x2="464" y2="37"/>
+
+  <!-- Drift correction -->
+  <rect class="box" x="468" y="6" width="130" height="62"/>
+  <text class="title" x="533" y="28">Drift correction</text>
+  <text class="desc" x="533" y="50">correct baseline drift</text>
+
+  <line class="arrow" x1="602" y1="37" x2="620" y2="37"/>
+
+  <!-- Event segmentation -->
+  <rect class="box" x="624" y="6" width="142" height="62"/>
+  <text class="title" x="695" y="28">Event segmentation</text>
+  <text class="desc" x="695" y="50">saccades, fixations, epochs</text>
+
+  <line class="arrow" x1="770" y1="37" x2="788" y2="37"/>
+
   <!-- Plotting -->
-  <rect class="box" x="672" y="10" width="100" height="68"/>
-  <text class="label" x="722" y="34">Plotting</text>
-  <text class="sub" x="722" y="52">time courses</text>
-  <text class="sub" x="722" y="64">gaze on screen</text>
+  <rect class="box" x="792" y="6" width="142" height="62"/>
+  <text class="title" x="863" y="28">Plotting</text>
+  <text class="desc" x="863" y="50">gaze &amp; pupil timecourses</text>
 </svg>

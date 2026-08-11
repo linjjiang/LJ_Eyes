@@ -14,12 +14,12 @@ blinks — replacing a manual, per-recording workflow that took roughly 10–20�
 
 ### Key methods
 
-- **Velocity & acceleration** — five-sample differentiator (Engbert & Kliegl, 2003)
-- **Artifact detection** — median absolute deviation (MAD) for pupil size and velocity outliers
-- **Blink detection** — four selectable methods: EyeLink parser, padded window, velocity-based (Mathôt, 2013), noise-based (Hershman et al., 2018)
-- **Smoothing** — Savitzky–Golay filter, linear or spline interpolation across gaps
-- **Saccade detection** — joint velocity, acceleration, amplitude, and duration thresholds; endpoint computation; merge of noise-split saccades
-- **Synthetic test data** — minimum-jerk displacement profile for saccades, with ground-truth labels for smoke testing
+- **Velocity & acceleration:** five-sample differentiator (Engbert & Kliegl, 2003)
+- **Artifact detection:** median absolute deviation (MAD) for pupil size and velocity outliers
+- **Blink detection:** four selectable methods: EyeLink parser, padded window, velocity-based (Mathôt, 2013), noise-based (Hershman et al., 2018)
+- **Smoothing:** Savitzky–Golay filter, linear or spline interpolation across gaps
+- **Saccade detection:** joint velocity, acceleration, amplitude, and duration thresholds; endpoint computation; merge of noise-split saccades
+- **Synthetic test data:** minimum-jerk displacement profile for saccades, with ground-truth labels for smoke testing
 
 ## Quickstart
 
@@ -67,13 +67,12 @@ events cannot be edited from it.
 
 | Stage | What it does | Details |
 |-------|-------------|---------|
-| **Import** | Reads `.edf` via Edf2Mat | Sampling rate, recorded eye, screen geometry, calibration results. Converts px ↔ degrees of visual angle. |
-| **Artifact detection** | Flags bad samples | Missing pupil, gaze off screen, extreme gaze velocity/acceleration, extreme pupil size or velocity (MAD units). Merges artifacts closer than a configurable gap. |
-| **Blink detection** | Four selectable methods | EyeLink parser events; padded window; velocity-based (Mathôt, 2013); noise-based (Hershman et al., 2018). |
-| **Cleaning** | Removes flagged samples | Linear or spline interpolation, Savitzky–Golay smoothing, pupil baseline correction (subtractive or divisive, mean or median of baseline epoch). |
-| **Drift correction** | Estimates and removes slow gaze drift | Saccade and fixation detection re-run on the corrected signal. |
-| **Event detection** | Segments trials and detects events | Epochs from EyeLink messages. Saccades via joint velocity, acceleration, amplitude, and duration thresholds. Fixations. Endpoint computation, noise-split saccade merging. |
-| **Plotting** | Generates figures | Raw and cleaned time courses, artifact distributions, gaze-on-screen plots. |
+| **Import recording** | Raw `.edf` → MATLAB structs | Sampling rate, recorded eye, screen geometry, calibration results. Converts px ↔ degrees of visual angle. |
+| **Artifact detection** | Flags bad samples | Missing pupil, gaze off screen, extreme gaze velocity/acceleration, extreme pupil size or velocity (MAD units). Merges artifacts closer than a configurable gap. Reports blink count and track-loss percentage. |
+| **Denoising** | Removes flagged samples | Linear or spline interpolation, Savitzky–Golay smoothing, pupil baseline correction (subtractive or divisive, mean or median of baseline epoch). |
+| **Drift correction** | Corrects for baseline drift | Estimates and removes slow gaze drift. Saccade and fixation detection re-run on the corrected signal. |
+| **Event segmentation** | Segments trials and detects events | Epochs from EyeLink messages. Saccades via joint velocity, acceleration, amplitude, and duration thresholds. Fixations. Endpoint computation, noise-split saccade merging. |
+| **Plotting** | Gaze and pupil timecourses | Raw and cleaned time courses, artifact distributions, gaze-on-screen plots. |
 
 Every analysis parameter lives in the settings struct. No thresholds are set inside the
 processing functions.
