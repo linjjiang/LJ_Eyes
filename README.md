@@ -53,11 +53,25 @@ Processing your own data requires [Edf2Mat](https://github.com/uzh/edf-converter
 
 ## Inspecting a recording
 
-`myGUI_miniEye/miniEye_ver0.mlapp` plots one trial at a time. You can step through trials,
-switch the y-axis between pupil and gaze channels, compare raw against cleaned samples,
-scrub a time window, and toggle overlays for detected fixations, saccades, and trial
-messages. It is a viewer only — it does not run or modify the pipeline, and detected
-events cannot be edited from it.
+`myGUI_miniEye/miniEye_ver0.mlapp` is a trial-by-trial viewer for inspecting preprocessed
+recordings. It plots gaze position (x/y in degrees) or pupil size over time, with six
+display modes selectable from the Data Type dropdown:
+
+- **Raw data** — the unprocessed signal
+- **Raw data with blinks** — raw signal with detected blink intervals marked
+- **Cleaned data** — after artifact removal and interpolation
+- **Drift corrected data** — after baseline drift correction
+- **Baseline corrected data** — pupil signal after baseline correction
+- **Raw data with artifacts** — raw signal with all flagged artifact intervals overlaid
+
+Toggling Saccades or Fixations on overlays the detected events onto whichever mode is
+active, so you can verify that the pipeline correctly identified blinks as artifacts and
+distinguished them from real saccades. The Message toggle shows trial event markers
+(fixation onset, target onset, etc.) as vertical lines. You can step through trials, scrub
+a time window with the start/end sliders, and zoom into regions of interest.
+
+It is a viewer only — it does not run or modify the pipeline, and detected events cannot
+be edited from it.
 
 ## Processing pipeline
 
