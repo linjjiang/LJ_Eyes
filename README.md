@@ -53,10 +53,6 @@ Processing your own data requires [Edf2Mat](https://github.com/uzh/edf-converter
 
 ## Inspecting a recording
 
-<p align="center">
-  <img src="docs/gui_screenshot.png" alt="miniEye GUI — pupil time course with trial navigation" width="700"/>
-</p>
-
 `myGUI_miniEye/miniEye_ver0.mlapp` plots one trial at a time. You can step through trials,
 switch the y-axis between pupil and gaze channels, compare raw against cleaned samples,
 scrub a time window, and toggle overlays for detected fixations, saccades, and trial
