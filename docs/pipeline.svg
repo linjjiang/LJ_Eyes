@@ -1,61 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 80" font-family="system-ui, -apple-system, sans-serif">
   <defs>
-    <style>
-      .box { fill: #f6f8fa; stroke: #d0d7de; stroke-width: 1; rx: 8; }
-      .title { fill: #1f2328; text-anchor: middle; dominant-baseline: central; font-size: 13px; font-weight: 600; }
-      .desc { fill: #656d76; text-anchor: middle; dominant-baseline: central; font-size: 10px; }
-      .arrow { fill: none; stroke: #c8ced5; stroke-width: 1.2; marker-end: url(#arw); }
-      @media (prefers-color-scheme: dark) {
-        .box { fill: #161b22; stroke: #30363d; }
-        .title { fill: #e6edf3; }
-        .desc { fill: #8b949e; }
-        .arrow { stroke: #3d444d; }
-        #arw path { stroke: #3d444d; }
-      }
-    </style>
     <marker id="arw" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto">
       <path d="M 1 1.5 L 7 4 L 1 6.5" fill="none" stroke="#c8ced5" stroke-width="1.2"/>
     </marker>
   </defs>
 
-  <!-- Import recording -->
-  <rect class="box" x="0" y="6" width="130" height="62"/>
-  <text class="title" x="65" y="28">Import recording</text>
-  <text class="desc" x="65" y="50">.edf → MATLAB structs</text>
+  <rect x="0" y="6" width="130" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="65" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Import recording</text>
+  <text x="65" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">.edf → MATLAB structs</text>
 
-  <!-- arrow -->
-  <line class="arrow" x1="134" y1="37" x2="152" y2="37"/>
+  <line x1="134" y1="37" x2="152" y2="37" fill="none" stroke="#c8ced5" stroke-width="1.2" marker-end="url(#arw)"/>
 
-  <!-- Artifact detection -->
-  <rect class="box" x="156" y="6" width="130" height="62"/>
-  <text class="title" x="221" y="28">Artifact detection</text>
-  <text class="desc" x="221" y="50">blinks, pupil size &amp; vel</text>
+  <rect x="156" y="6" width="130" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="221" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Artifact detection</text>
+  <text x="221" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">blinks, pupil size &amp; vel</text>
 
-  <line class="arrow" x1="290" y1="37" x2="308" y2="37"/>
+  <line x1="290" y1="37" x2="308" y2="37" fill="none" stroke="#c8ced5" stroke-width="1.2" marker-end="url(#arw)"/>
 
-  <!-- Denoising -->
-  <rect class="box" x="312" y="6" width="130" height="62"/>
-  <text class="title" x="377" y="28">Denoising</text>
-  <text class="desc" x="377" y="50">Savitzky–Golay filter</text>
+  <rect x="312" y="6" width="130" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="377" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Denoising</text>
+  <text x="377" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">Savitzky–Golay filter</text>
 
-  <line class="arrow" x1="446" y1="37" x2="464" y2="37"/>
+  <line x1="446" y1="37" x2="464" y2="37" fill="none" stroke="#c8ced5" stroke-width="1.2" marker-end="url(#arw)"/>
 
-  <!-- Drift correction -->
-  <rect class="box" x="468" y="6" width="130" height="62"/>
-  <text class="title" x="533" y="28">Drift correction</text>
-  <text class="desc" x="533" y="50">correct baseline drift</text>
+  <rect x="468" y="6" width="130" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="533" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Drift correction</text>
+  <text x="533" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">correct baseline drift</text>
 
-  <line class="arrow" x1="602" y1="37" x2="620" y2="37"/>
+  <line x1="602" y1="37" x2="620" y2="37" fill="none" stroke="#c8ced5" stroke-width="1.2" marker-end="url(#arw)"/>
 
-  <!-- Event segmentation -->
-  <rect class="box" x="624" y="6" width="142" height="62"/>
-  <text class="title" x="695" y="28">Event segmentation</text>
-  <text class="desc" x="695" y="50">saccades, fixations, epochs</text>
+  <rect x="624" y="6" width="142" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="695" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Event segmentation</text>
+  <text x="695" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">saccades, fixations, epochs</text>
 
-  <line class="arrow" x1="770" y1="37" x2="788" y2="37"/>
+  <line x1="770" y1="37" x2="788" y2="37" fill="none" stroke="#c8ced5" stroke-width="1.2" marker-end="url(#arw)"/>
 
-  <!-- Plotting -->
-  <rect class="box" x="792" y="6" width="142" height="62"/>
-  <text class="title" x="863" y="28">Plotting</text>
-  <text class="desc" x="863" y="50">gaze &amp; pupil timecourses</text>
+  <rect x="792" y="6" width="142" height="62" fill="#f6f8fa" stroke="#d0d7de" stroke-width="1" rx="8"/>
+  <text x="863" y="28" fill="#1f2328" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600">Plotting</text>
+  <text x="863" y="50" fill="#656d76" text-anchor="middle" dominant-baseline="central" font-size="10">gaze &amp; pupil timecourses</text>
 </svg>

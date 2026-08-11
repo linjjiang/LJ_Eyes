@@ -208,6 +208,15 @@ set.bcorr.msg         = 2;
 set.bcorr.method      = 1;
 set.bcorr.base_method = 2;
 
+set.fix.disp_threshold = 1.5;     % deg — dispersion threshold for fixation
+set.fix.dur_threshold  = 100;     % ms  — minimum fixation duration
+set.fix.vel_threshold  = 30;      % deg/s — velocity threshold for fixation
+
+set.noise.baseline_ratio = 0.5;   % baseline ratio for drift correction
+
+set.screen.xres = edf.screen.xres;
+set.screen.yres = edf.screen.yres;
+
 set.plot.trial_srt = 1;
 set.plot.trial_end = 5;
 

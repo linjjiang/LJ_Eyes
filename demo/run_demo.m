@@ -1,7 +1,11 @@
 %% LJ_Eyes demo: preprocess a synthetic recording end to end
 %
-% Generates a synthetic recording with known saccades and blinks, runs it
-% through the pipeline, and checks that the detectors recover what was put in.
+% Generates a synthetic recording with known saccades and blinks, runs the
+% full pipeline (artifact detection, cleaning, interpolation, smoothing,
+% epoch segmentation, saccade/fixation detection, drift correction, and
+% baseline correction), checks the detectors against ground truth, and
+% opens the GUI for visual inspection.
+%
 % No participant data and no Edf2Mat MEX build required.
 %
 % Run from the repo root:
@@ -39,19 +43,40 @@ fprintf('Samples flagged:      %.2f%%\n\n', 100*edf.trackloss.perc);
 %% 4. Artifact removal ------------------------------------------------------
 edf = remove_artifact(edf,set);
 
-%% 5. Event segmentation ----------------------------------------------------
+%% 5. Interpolation ---------------------------------------------------------
+edf = do_interpolation(edf,set);
+
+%% 6. Smoothing -------------------------------------------------------------
+edf = sgolay_smoothing(edf,set);
+
+%% 7. Event segmentation ----------------------------------------------------
 edf = detect_epoch(edf,set);
+
+%% 8. Baseline correction ---------------------------------------------------
+edf = baseline_correction(edf,set);
+
+%% 9. Saccade and fixation detection ----------------------------------------
 edf = detect_saccades(edf,set);
+edf = detect_fixations(edf,set);
 
 nsac = numel(edf.events.sac.trial);
+nfix = numel(edf.events.fix.trial);
 fprintf('Saccades detected:    %d  (injected %d)\n', nsac, edf.truth.n_saccades);
+fprintf('Fixations detected:   %d\n', nfix);
 if nsac > 0
     fprintf('Median amplitude:     %.1f deg  (injected %.1f)\n', ...
         median(edf.events.sac.amp), edf.truth.sac_amp_deg);
     fprintf('Median peak velocity: %.0f deg/s\n\n', median(edf.events.sac.peak_vel));
 end
 
-%% 6. Check the detectors against ground truth ------------------------------
+%% 10. Drift correction -----------------------------------------------------
+edf = drift_correction(edf,set);
+
+% Re-run detection on drift-corrected signal
+edf = detect_saccades_after_dc(edf,set);
+edf = detect_fixations_after_dc(edf,set);
+
+%% 11. Check the detectors against ground truth -----------------------------
 % Deliberately loose: detectors legitimately split or merge events near
 % threshold. These bounds catch a broken pipeline, not a slightly tuned one.
 ok = true;
@@ -79,28 +104,5 @@ else
     fprintf(2,'Some checks failed - see above.\n');
 end
 
-%% 7. View in GUI ----------------------------------------------------------
-% The GUI reads cleaned/drift-corrected fields that the demo pipeline does
-% not produce (it stops after detection). Copy the raw signals into those
-% slots so the GUI can launch; all display modes will show the same data.
-if ~isfield(edf.samples,'x_deg_clean')
-    edf.samples.x_deg_clean       = edf.samples.x_deg;
-    edf.samples.y_deg_clean       = edf.samples.y_deg;
-    edf.samples.pupil_size_clean  = edf.samples.pupil_size;
-end
-if ~isfield(edf.samples,'x_deg_clean_drift')
-    edf.samples.x_deg_clean_drift     = edf.samples.x_deg;
-    edf.samples.y_deg_clean_drift     = edf.samples.y_deg;
-    edf.samples.pupil_size_clean_drift = edf.samples.pupil_size;
-end
-if ~isfield(edf.samples,'pupil_size_corr')
-    edf.samples.pupil_size_corr = edf.samples.pupil_size;
-end
-if ~isfield(edf.events,'fix')
-    empty_ev = struct('ind_srt',[],'ind_end',[],'trial',[]);
-    edf.events.fix    = empty_ev;
-    edf.events.sac_dc = empty_ev;
-    edf.events.fix_dc = empty_ev;
-end
-
+%% 12. View in GUI ----------------------------------------------------------
 miniEye_ver0;
