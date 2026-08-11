@@ -10,7 +10,10 @@ msgTime = []; % timing of the message
 for ii = 1:length(msg) % for each message
     ind = [];
     ind = contains(edf.default_events.Messages.info,msg{ii}); % startsWith
-%     ind = find(ind==1);
+    ind = find(ind==1); % BUG FIX: contains returns a logical array; without
+                        % find, length(ind) counts ALL messages, not matches,
+                        % so msgText and msgTime grow at different rates and
+                        % the later reshape fails.
 %     if ii == 1|ii == 14 % TRIAL ID
 %         ind(1) = []; ind(end) = [];
 %     elseif ii == 2 % Fixation
