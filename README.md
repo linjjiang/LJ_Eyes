@@ -1,14 +1,16 @@
 # LJ_Eyes
 
-MATLAB R2019b+
-License: BSD-3
-Platform: EyeLink
+![MATLAB R2019b+](https://img.shields.io/badge/MATLAB-R2019b%2B-blue)
+![License: BSD-3](https://img.shields.io/badge/License-BSD--3-green)
+![Platform: EyeLink](https://img.shields.io/badge/Platform-SR%20Research%20EyeLink-lightgrey)
 
 An automated preprocessing toolbox for EyeLink eye-tracking recordings. Takes raw `.edf`
 files and produces cleaned gaze and pupil signals with labelled saccades, fixations, and
 blinks — replacing a manual, per-recording workflow that took roughly 10–20× longer.
 
-
+<p align="center">
+  <img src="docs/pipeline.svg" alt="Processing pipeline" width="100%"/>
+</p>
 
 ### Key methods
 
@@ -25,7 +27,8 @@ addpath(genpath(pwd))   % from the repo root
 run_demo                % generate a synthetic recording, preprocess it, check the output
 ```
 
-Expected output
+<details>
+<summary>Expected output</summary>
 
 ```
 Synthetic recording: 8 trials, 16000 samples at 500 Hz
@@ -41,6 +44,7 @@ Median peak velocity: 440 deg/s
 
 All checks passed.
 ```
+</details>
 
 The demo simulated a **synthetic test data** with different types of events, including main-sequence saccades with hypometria, corrective saccades and glissades, plus fixational drift, tremor, microsaccades, and lid-artifact blinks. These events come with ground-truth labels for smoke testing.
 
@@ -68,7 +72,7 @@ Every analysis parameter lives in the **settings** struct, where you can customi
 
 `myGUI_miniEye/miniEye_ver0.mlapp` is a trial-by-trial viewer for preprocessed recordings. `run_demo` opens it on the synthetic data; to open it on your own, put `edf` and `set` in the base workspace and run `miniEye_ver0`.
 
-miniEye viewer
+![miniEye viewer](docs/miniEye.png)
 
 *Trial 1 of the synthetic recording: gaze x (blue) and y (orange), blink samples flagged, detected saccades in red, fixations in green, trial messages as dashed markers.*
 
